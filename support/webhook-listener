@@ -23,14 +23,14 @@ test -x $DAEMON || exit 0
 
 
 d_start () {
-    log_daemon_msg "Starting system $DEAMON_NAME Daemon"
+  log_daemon_msg "Starting system $DEAMON_NAME Daemon"
 	start-stop-daemon --background --name $DEAMON_NAME --start --quiet --exec $DAEMON -- $DEAMON_OPT
-    log_end_msg $?
+  log_end_msg $?
 }
 
 d_stop () {
-    log_daemon_msg "Stopping system $DEAMON_NAME Daemon"
-    start-stop-daemon --name $DEAMON_NAME --stop --retry 5 --quiet --name $DEAMON_NAME
+  log_daemon_msg "Stopping system $DEAMON_NAME Daemon"
+  start-stop-daemon --name $DEAMON_NAME --stop --retry 5 --quiet --name $DEAMON_NAME
 	log_end_msg $?
 }
 
@@ -41,12 +41,12 @@ case "$1" in
                 ;;
 
         restart|reload|force-reload)
-                        d_stop
-                        d_start
+                d_stop
+                d_start
                 ;;
 
         force-stop)
-               d_stop
+                d_stop
                 killall -q $DEAMON_NAME || true
                 sleep 2
                 killall -q -9 $DEAMON_NAME || true
