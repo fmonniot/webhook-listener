@@ -6,7 +6,7 @@ import (
 	"log"
 	"os"
 
-	server "github.com/fmonniot/dns-webhook-listener"
+	server "github.com/fmonniot/webhook-listener"
 )
 
 var listenAddr = flag.String("listen", "localhost:8080", "<address>:<port> to listen on")
