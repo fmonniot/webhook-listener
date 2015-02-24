@@ -1,6 +1,6 @@
 {
   "listenAddr": "localhost:8081",
   "apikeys": {
-	"key": ["ker"]
-}
+  	"key": ["ker"]
+  }
 }
