@@ -37,7 +37,8 @@ func parseConfig() (*server.Config, error) {
 			return nil, err
 		}
 	}
-	log.Printf("%+v", config)
+
+	log.Printf("%#v", config)
 
 	if *listenAddr != "localhost:8080" || config.ListenAddr == "" {
 		config.ListenAddr = *listenAddr
