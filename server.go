@@ -6,22 +6,22 @@ import (
 	"net/http"
 )
 
-// Config TODO
+// Config of this server
 type Config struct {
 	ListenAddr string
 	TLS        struct {
 		Key  string
 		Cert string
 	}
-	Endpoints map[string]Endpoint `json:"endpoints"`
+	Endpoints []Endpoint `json:"endpoints"`
 }
 
-// Serve TODO
+// Serve will register endpoints and create the http server
 func Serve(config *Config) error {
 	registry := CreateRegistry()
 
-	for key, endpoint := range config.Endpoints {
-		registry.Add(key, endpoint)
+	for _, endpoint := range config.Endpoints {
+		registry.Add(endpoint)
 	}
 
 	http.Handle("/", &registry)

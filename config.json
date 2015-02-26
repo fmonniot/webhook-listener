@@ -4,18 +4,17 @@
     "key": "/path/to/file.key",
     "cert": "/path/to/file.crt"
   },
-  "endpoints":
+  "endpoints": [
     {
-      "gitlab-dns": {
-        "messageType": "GitlabPushMessage",
-        "path": "/gitlab/dns",
-        "apiKey": "ker",
-        "commandDir": "/etc/bind",
-        "commands": [
-          ["/usr/bin/git", "pull"],
-          ["/usr/sbin/named-checkconf"],
-          ["/etc/init.d/bind9", "restart"]
-        ]
-      }
+      "messageType": "GitlabPushMessage",
+      "path": "/gitlab/dns",
+      "apiKey": "ker",
+      "commandDir": "/etc/bind",
+      "commands": [
+        ["/usr/bin/git", "pull"],
+        ["/usr/sbin/named-checkconf"],
+        ["/etc/init.d/bind9", "restart"]
+      ]
     }
+  ]
 }

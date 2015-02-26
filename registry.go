@@ -12,7 +12,8 @@ import (
 	"text/template"
 )
 
-// Endpoint TODO
+// Endpoint is the configuration of a path of our HTTP server including security,
+// type of message and commands to execute
 type Endpoint struct {
 	MessageType string `json:"messageType"`
 	Apikey      string `json:"apiKey"`
@@ -21,7 +22,7 @@ type Endpoint struct {
 	Commands    [][]string
 }
 
-// Registry TODO
+// Registry represent a collection of endpoint and there http.Handler
 type Registry struct {
 	endpoints map[string]Endpoint
 }
@@ -31,7 +32,7 @@ type httpError struct {
 	message string
 }
 
-// CreateRegistry TODO
+// CreateRegistry will allocate a new registry and its endpoints
 func CreateRegistry() Registry {
 	var reg Registry
 
@@ -40,8 +41,8 @@ func CreateRegistry() Registry {
 	return reg
 }
 
-// Add a handler for message
-func (reg *Registry) Add(key string, endpoint Endpoint) {
+// Add an endpoint to the registry
+func (reg *Registry) Add(endpoint Endpoint) {
 	reg.endpoints[endpoint.Path] = endpoint
 
 	return
