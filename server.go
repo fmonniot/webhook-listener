@@ -17,9 +17,7 @@ type Config struct {
 }
 
 // Serve will register endpoints and create the http server
-func Serve(config *Config) error {
-	registry := CreateRegistry()
-
+func Serve(config *Config, registry Registry) error {
 	for _, endpoint := range config.Endpoints {
 		registry.Add(endpoint)
 	}

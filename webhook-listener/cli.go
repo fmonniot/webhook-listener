@@ -6,6 +6,7 @@ import (
 	"log"
 	"os"
 
+	registry "github.com/fmonniot/webhook-listener"
 	server "github.com/fmonniot/webhook-listener"
 )
 
@@ -21,7 +22,8 @@ func main() {
 	}
 
 	log.Printf("Starting server on %s", config.ListenAddr)
-	if err := server.Serve(config); err != nil {
+	reg := registry.CreateRegistry()
+	if err := server.Serve(config, reg); err != nil {
 		log.Fatal(err)
 	}
 }
