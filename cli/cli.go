@@ -10,7 +10,7 @@ import (
 )
 
 var listenAddr = flag.String("listen", "localhost:8080", "<address>:<port> to listen on")
-var configFile = flag.String("config-file", "", "Location of handler config file")
+var configFile = flag.String("config", "", "Location of the config file")
 
 func main() {
 	flag.Parse()
