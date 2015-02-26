@@ -23,7 +23,12 @@ type Endpoint struct {
 }
 
 // Registry represent a collection of endpoint and there http.Handler
-type Registry struct {
+type Registry interface {
+	Add(endpoint Endpoint)
+	ServeHTTP(res http.ResponseWriter, req *http.Request)
+}
+
+type registryStruct struct {
 	endpoints map[string]Endpoint
 }
 
@@ -34,21 +39,21 @@ type httpError struct {
 
 // CreateRegistry will allocate a new registry and its endpoints
 func CreateRegistry() Registry {
-	var reg Registry
+	var reg registryStruct
 
 	reg.endpoints = make(map[string]Endpoint)
 
-	return reg
+	return &reg
 }
 
 // Add an endpoint to the registry
-func (reg *Registry) Add(endpoint Endpoint) {
+func (reg *registryStruct) Add(endpoint Endpoint) {
 	reg.endpoints[endpoint.Path] = endpoint
 
 	return
 }
 
-func (reg *Registry) ServeHTTP(res http.ResponseWriter, req *http.Request) {
+func (reg *registryStruct) ServeHTTP(res http.ResponseWriter, req *http.Request) {
 	log.Printf("%s %s %s", req.RemoteAddr, req.Method, req.URL.Path)
 
 	// Route to correct endpoint
@@ -72,6 +77,8 @@ func (reg *Registry) ServeHTTP(res http.ResponseWriter, req *http.Request) {
 		http.Error(res, httpErr.message, httpErr.code)
 		return
 	}
+
+	log.Printf("%+v", message)
 
 	// Convert generic map to struct
 	msg, err := DecodeMessage(message)

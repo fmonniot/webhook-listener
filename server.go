@@ -24,17 +24,17 @@ func Serve(config *Config) error {
 		registry.Add(endpoint)
 	}
 
-	http.Handle("/", &registry)
+	http.Handle("/", registry)
 
 	// Manage TLS
 	if config.TLS.Key != "" && config.TLS.Cert != "" {
 		log.Print("Starting with SSL")
-		return http.ListenAndServeTLS(config.ListenAddr, config.TLS.Cert, config.TLS.Key, &registry)
+		return http.ListenAndServeTLS(config.ListenAddr, config.TLS.Cert, config.TLS.Key, registry)
 	}
 
 	// No TLS configured
 	log.Print("Warning: Server is starting without SSL, you should not pass any credentials using this configuration")
 	log.Print("To use SSL, you must provide a config file with a `tls` section, and provide locations to a `key` file and a `cert` file")
 
-	return http.ListenAndServe(config.ListenAddr, &registry)
+	return http.ListenAndServe(config.ListenAddr, registry)
 }
