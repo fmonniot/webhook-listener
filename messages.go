@@ -7,21 +7,21 @@ type GitlabPushMessage struct {
 	Before            string
 	After             string
 	Ref               string
-	UserID            int    `json:"user_id"`
-	UserName          string `json:"user_name"`
-	ProjectID         int    `json:"project_id"`
-	TotalCommitsCount int    `json:"total_commits_count"`
+	UserID            int    `mapstructure:"user_id"`
+	UserName          string `mapstructure:"user_name"`
+	ProjectID         int    `mapstructure:"project_id"`
+	TotalCommitsCount int    `mapstructure:"total_commits_count"`
 	Repository        struct {
 		Name        string
-		URL         string `json:"url"`
+		URL         string `mapstructure:"url"`
 		Description string
 		Homepage    string
 	}
 	Commits []struct {
-		ID        string `json:"id"`
+		ID        string `mapstructure:"id"`
 		Message   string
 		Timestamp string
-		URL       string `json:"url"`
+		URL       string `mapstructure:"url"`
 		Author    struct {
 			Name  string
 			Email string
