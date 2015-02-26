@@ -16,16 +16,11 @@ type Config struct {
 	Endpoints map[string]Endpoint `json:"endpoints"`
 }
 
-var serverConfig *Config
-var registry Registry
-
 // Serve TODO
 func Serve(config *Config) error {
-	serverConfig = config
+	registry := CreateRegistry()
 
-	registry = CreateRegistry()
-
-	for key, endpoint := range serverConfig.Endpoints {
+	for key, endpoint := range config.Endpoints {
 		registry.Add(key, endpoint)
 	}
 
