@@ -2,12 +2,14 @@
 package webhookListener
 
 import (
+	"bytes"
 	"encoding/json"
 	"fmt"
 	"io"
 	"log"
 	"net/http"
 	"os/exec"
+	"text/template"
 )
 
 // Endpoint TODO
@@ -42,7 +44,6 @@ func CreateRegistry() Registry {
 func (reg *Registry) Add(key string, endpoint Endpoint) {
 	reg.endpoints[endpoint.Path] = endpoint
 
-	log.Printf("%#v", reg)
 	return
 }
 
@@ -83,7 +84,11 @@ func (reg *Registry) ServeHTTP(res http.ResponseWriter, req *http.Request) {
 
 	// Exec	 commands
 	for _, params := range endpoint.Commands {
-		// TODO parse command and potentialy inject data from message
+
+		for key := range params {
+			params[key] = parseTemplate(params[key], msg)
+		}
+
 		cmd := exec.Command(params[0], params[1:]...)
 		run(endpoint.CommandDir, cmd)
 	}
@@ -116,6 +121,15 @@ func decodeJSON(message *map[string]interface{}, body io.Reader) *httpError {
 		return &httpError{500, "Could not decode json"}
 	}
 	return nil
+}
+
+func parseTemplate(tpl string, value interface{}) string {
+	commandTpl := template.Must(template.New("letter").Parse(tpl))
+	var b bytes.Buffer
+	commandTpl.Execute(&b, value)
+	command := b.String()
+
+	return command
 }
 
 func run(dir string, cmd *exec.Cmd) {
