@@ -11,6 +11,7 @@
       "apiKey": "ker",
       "commandDir": "/etc/bind",
       "commands": [
+        ["/bin/echo", "Change made by {{.UserName}}"],
         ["/usr/bin/git", "pull"],
         ["/usr/sbin/named-checkconf"],
         ["/etc/init.d/bind9", "restart"]
