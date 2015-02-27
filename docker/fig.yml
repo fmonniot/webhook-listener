@@ -1,3 +1,0 @@
-server:
-  build: .
-  command: -listen 0.0.0.0:4000
