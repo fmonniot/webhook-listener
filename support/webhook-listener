@@ -12,7 +12,7 @@
 ### END INIT INFO
 
 DAEMON="/usr/local/bin/webhook-listener"
-DEAMON_OPTS="--config-file /etc/webhook-listener.json"
+DAEMON_OPTS="-config /etc/webhook-listener.json"
 NAME=webhooklistener
 DESC=webhook-listener
 
