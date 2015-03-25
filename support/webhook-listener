@@ -12,52 +12,66 @@
 ### END INIT INFO
 
 DAEMON="/usr/local/bin/webhook-listener"
-DEAMON_OPT="--config-file /etc/webhook-listener.json"
-DEAMON_NAME="webhook-listener"
+DEAMON_OPTS="--config-file /etc/webhook-listener.json"
+NAME=webhooklistener
+DESC=webhook-listener
 
 PATH="/sbin:/bin:/usr/sbin:/usr/bin"
 
-test -x $DAEMON || exit 0
-
 . /lib/lsb/init-functions
 
+test -x $DAEMON || exit 0
 
-d_start () {
-  log_daemon_msg "Starting system $DEAMON_NAME Daemon"
-	start-stop-daemon --background --name $DEAMON_NAME --start --quiet --exec $DAEMON -- $DEAMON_OPT
-  log_end_msg $?
+set -e
+
+PID=/run/gitlab-webhook.pid
+
+start() {
+    start-stop-daemon --start --background --quiet --make-pidfile --pidfile $PID \
+      --retry 5 --exec $DAEMON --oknodo -- $DAEMON_OPTS
 }
 
-d_stop () {
-  log_daemon_msg "Stopping system $DEAMON_NAME Daemon"
-  start-stop-daemon --name $DEAMON_NAME --stop --retry 5 --quiet --name $DEAMON_NAME
-	log_end_msg $?
+stop() {
+    start-stop-daemon --stop --quiet --pidfile $PID \
+      --retry 5 --oknodo --exec $DAEMON
 }
 
 case "$1" in
+  start)
+    log_daemon_msg "Starting $DESC" "$NAME"
+    start
+    log_end_msg $?
+    ;;
 
-        start|stop)
-                d_${1}
-                ;;
+  stop)
+    log_daemon_msg "Stopping $DESC" "$NAME"
+    stop
+    log_end_msg $?
+    ;;
 
-        restart|reload|force-reload)
-                d_stop
-                d_start
-                ;;
+  restart)
+    log_daemon_msg "Restarting $DESC" "$NAME"
+    stop
+    sleep 1
+    start
+    log_end_msg $?
+    ;;
 
-        force-stop)
-                d_stop
-                killall -q $DEAMON_NAME || true
-                sleep 2
-                killall -q -9 $DEAMON_NAME || true
-                ;;
+  reload)
+    log_daemon_msg "Reloading $DESC configuration" "$NAME"
+    start-stop-daemon --stop --signal HUP --quiet --pidfile $PID \
+      --oknodo --exec $DAEMON
+    log_end_msg $?
+    ;;
 
-        status)
-                status_of_proc "$DEAMON_NAME" "$DAEMON" "system-wide $DEAMON_NAME" && exit 0 || exit $?
-                ;;
-        *)
-                echo "Usage: /etc/init.d/$DEAMON_NAME {start|stop|force-stop|restart|reload|force-reload|status}"
-                exit 1
-                ;;
+  status)
+    status_of_proc -p $PID "$DAEMON"
+    ;;
+
+  *)
+    echo "Usage: $NAME {start|stop|restart|reload|status}" >&2
+    exit 1
+    ;;
 esac
+
 exit 0
